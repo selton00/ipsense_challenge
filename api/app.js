@@ -2,15 +2,24 @@ var express = require('express');
 var app = express();
 var uuid = require('node-uuid');
 var logger = require('morgan');
+require('dotenv/config');
 
-var pg = require('pg');
-var conString = process.env.DB; // "postgres://username:password@localhost/database";
+const { Pool } = require('pg');
+// var conString = process.env.DB; // "postgres://username:password@localhost/database";
+
+const pool = new Pool({
+  user: process.env.DB_USER,
+  host: process.env.DB_HOST,
+  database: process.env.DB_DATABASE,
+  password: process.env.DB_PASSWORD,
+  port: process.env.DB_PORT,
+})
 
 app.use(logger('dev'));
 
 // Routes
 app.get('/api/status', function(req, res) {
-  pg.connect(conString, function(err, client, done) {
+  pool.connect(function(err, client, done) {
     if(err) {
       return res.status(500).send('error fetching client from pool');
     }

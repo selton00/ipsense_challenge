@@ -1,0 +1,49 @@
+version: "3.8"
+
+volumes:
+  db-data:
+
+networks:
+  db-network:
+  api-network:
+
+services:
+  db:
+    image: postgres:9.6
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    networks:
+      - db-network
+    environment:
+      POSTGRES_USER: pguser
+      POSTGRES_DB: teste
+      POSTGRES_PASSWORD: dbpwd
+    expose:
+      - 5432
+
+  api:
+    build: api
+    networks:
+      - db-network
+      - api-network
+    environment:
+      PORT: 8081
+      DB: postgres://pguser:dbpwd@localhost:5432/teste
+      DB_HOST: db
+      DB_USER: pguser
+      DB_DATABASE: teste
+      DB_PORT: 5432
+    expose:
+      - 8081
+
+  web:
+    build: web
+    networks:
+      - api-network
+    environment:
+      PORT: 8080
+      API_HOST: http://api:8081
+    expose:
+      - 8080
+    ports:
+      - 8080:8080
