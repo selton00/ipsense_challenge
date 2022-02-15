@@ -3,7 +3,6 @@ var app = express();
 var uuid = require('node-uuid');
 var logger = require('morgan');
 require('dotenv/config');
-
 const { Pool } = require('pg');
 // var conString = process.env.DB; // "postgres://username:password@localhost/database";
 
@@ -13,9 +12,8 @@ const pool = new Pool({
   database: process.env.DB_DATABASE,
   password: process.env.DB_PASSWORD,
   port: process.env.DB_PORT,
-})
+});
 
-app.use(logger('dev'));
 
 // Routes
 app.get('/api/status', function(req, res) {

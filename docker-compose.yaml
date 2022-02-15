@@ -9,7 +9,7 @@ networks:
 
 services:
   db:
-    image: postgres:9.6
+    image: postgres:13.3
     volumes:
       - db-data:/var/lib/postgresql/data
     networks:
@@ -28,13 +28,15 @@ services:
       - api-network
     environment:
       PORT: 8081
-      DB: postgres://pguser:dbpwd@localhost:5432/teste
+      DB: postgres://pguser:dbpwd@db:5432/teste
       DB_HOST: db
       DB_USER: pguser
       DB_DATABASE: teste
+      DB_PASSWORD: dbpwd
       DB_PORT: 5432
     expose:
       - 8081
+    
 
   web:
     build: web
